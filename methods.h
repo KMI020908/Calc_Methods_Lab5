@@ -263,7 +263,7 @@ template<typename Type>
 void getJacobiMatrix2D(std::vector<std::vector<Type>> &matrix, Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y), Type x, Type y, Type h = 1e-4);
 
 template<typename Type>
-Type getEquationSolutionNewthon(Type (*f)(Type x), Type firstX, Type accuracy = 1e-6, Type h = 1e-4, std::size_t stopIteration = 10000);
+Type getEquationSolutionNewthon(Type (*f)(Type x), Type firstX, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIteration = 10000);
 
 template<typename Type>
 std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type accuracy = 1e-6, Type h = 1e-4, std::size_t stopIteration = 10000);

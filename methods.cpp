@@ -2494,7 +2494,7 @@ std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type accuracy, 
 
 template<typename Type>
 std::size_t getSystemSolutionNewthon(std::vector<Type> &solution, Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y),
-Type firstX, Type firstY, Type accuracy, Type h, Type p, std::size_t stopIteration){
+Type firstX, Type firstY, Type h, Type accuracy, Type p, std::size_t stopIteration){
     std::size_t numOfIterations = 1;
     solution.resize(2);
     std::vector<Type> prevSolution = {firstX, firstY};
@@ -2525,6 +2525,7 @@ Type firstX, Type firstY, Type accuracy, Type h, Type p, std::size_t stopIterati
     return numOfIterations;
 }
 
+/*
 template<typename Type>
 void getRectangularGrid(std::vector<Type> &xGrid, std::vector<Type> &yGrid, Type L1, Type L2, std::size_t N){
     xGrid.clear();
@@ -2536,3 +2537,4 @@ void getRectangularGrid(std::vector<Type> &xGrid, std::vector<Type> &yGrid, Type
         yGrid.push_back(-L2 + i * h2);
     }
 }
+*/
