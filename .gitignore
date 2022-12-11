@@ -1,0 +1,15 @@
+# Вывод данных
+pointsOf2DSys/**
+Tests/**
+eps4/**
+eps7/**
+
+# Константы
+/filePath.h
+
+# Системные файлы
+.vscode/**
+*.exe
+*.nb
+*.txt
+*.pdf
