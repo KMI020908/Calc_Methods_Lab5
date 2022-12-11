@@ -194,7 +194,7 @@ Type invertItersMethodRayleigh(const std::vector<std::vector<Type>> &matrix, std
 std::vector<Type> &eigenVec, Type accuracy = 1e-6, bool is3Diag = false);
 
 template<typename Type>
-FILE_FLAG writeNewthonSwPool(const std::vector<std::vector<Type>> &matrix, Type step, const std::string& OUT_FILE_PATH, 
+FILE_FLAG writeRayleighSwPool(const std::vector<std::vector<Type>> &matrix, Type step, const std::string& OUT_FILE_PATH, 
 Type accuracy = 1e-6, bool is3Diag = false);
 
 // Лаба 3
@@ -266,7 +266,7 @@ template<typename Type>
 Type getEquationSolutionNewthon(Type (*f)(Type x), Type firstX, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIteration = 10000);
 
 template<typename Type>
-std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type accuracy = 1e-6, Type h = 1e-4, std::size_t stopIteration = 10000);
+std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIteration = 10000);
 
 template<typename Type>
 std::size_t getSystemSolutionNewthon(std::vector<Type> &solution, Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y),

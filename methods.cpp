@@ -1999,7 +1999,7 @@ std::vector<Type> &eigenVec, Type accuracy, bool is3Diag){
 }
 
 template<typename Type>
-FILE_FLAG writeNewthonSwPool(const std::vector<std::vector<Type>> &matrix, Type step, const std::string& OUT_FILE_PATH, 
+FILE_FLAG writeRayleighSwPool(const std::vector<std::vector<Type>> &matrix, Type step, const std::string& OUT_FILE_PATH, 
 Type accuracy, bool is3Diag){
     std::ofstream file;
 	file.open(OUT_FILE_PATH);
@@ -2461,7 +2461,7 @@ void getJacobiMatrix2D(std::vector<std::vector<Type>> &matrix, Type (*f1)(Type x
 }
 
 template<typename Type>
-Type getEquationSolutionNewthon(Type (*f)(Type x), Type firstX, Type accuracy, Type h, std::size_t stopIteration){
+Type getEquationSolutionNewthon(Type (*f)(Type x), Type firstX, Type h, Type accuracy, std::size_t stopIteration){
     Type tempX = firstX - f(firstX) / diff(f, firstX, h);
     Type prevX = firstX;
     std::size_t numOfIters = 0;
@@ -2477,7 +2477,7 @@ Type getEquationSolutionNewthon(Type (*f)(Type x), Type firstX, Type accuracy, T
 }
 
 template<typename Type>
-std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type accuracy, Type h, std::size_t stopIteration){
+std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type h, Type accuracy, std::size_t stopIteration){
     Type tempX = firstX - f(firstX) / diff(f, firstX, accuracy);
     Type prevX = firstX;
     std::size_t numOfIters = 0;
@@ -2525,16 +2525,30 @@ Type firstX, Type firstY, Type h, Type accuracy, Type p, std::size_t stopIterati
     return numOfIterations;
 }
 
-/*
 template<typename Type>
-void getRectangularGrid(std::vector<Type> &xGrid, std::vector<Type> &yGrid, Type L1, Type L2, std::size_t N){
-    xGrid.clear();
-    yGrid.clear();
-    Type h1 = 2.0 * L1 / N;
-    Type h2 = 2.0 * L2 / N;
-    for (std::size_t i = 0; i < N + 1; i++){
-        xGrid.push_back(-L1 + i * h1);
-        yGrid.push_back(-L2 + i * h2);
+FILE_FLAG writeNewthonSwPool(Type (*reF)(Type x, Type y), Type (*imF)(Type x, Type y), Type R, std::size_t n, 
+Type h, Type accuracy, const std::string &OUT_FILE_PATH, std::size_t stopIteration){
+    std::ofstream file;
+	file.open(OUT_FILE_PATH);
+	if (!file.is_open())
+		exit(NOT_OPEN);
+    std::vector<Type> rGrid;
+    Type step = R / n;
+    for (std::size_t i = 1; i < n + 1; i++){
+        Type tempR = step * i;
+        rGrid.push_back(tempR);
     }
-}
-*/
+    std::vector<Type> solution;
+    for (std::size_t i = 0; i < rGrid.size(); i++){
+        Type phi = 0.0;
+        while (phi < 2 * M_PI){
+            Type x = rGrid[i] * std::cos(phi);
+            Type y = rGrid[i] * std::sin(phi);
+            getSystemSolutionNewthon(solution, reF, imF, x, y, h, accuracy, 2.0, stopIteration);
+            file << x << ' ' << y << ' ' << solution[0] << ' ' << solution[1] << '\n';
+            phi += step;
+        }
+    }
+    file.close();
+    return IS_CLOSED;
+};

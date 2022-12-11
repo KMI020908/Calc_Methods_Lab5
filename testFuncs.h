@@ -42,4 +42,14 @@ Type func52(Type x, Type y){
     return x * x + y * y + x * y - 7.0;
 }
 
+template<typename Type>
+Type func61(Type x, Type y){
+    return -1.0 + std::pow(x, 4) - 6 * std::pow(x, 2) * std::pow(y, 2) + std::pow(y, 4);
+}
+
+template<typename Type>
+Type func62(Type x, Type y){
+    return 4.0 * (std::pow(x, 3) * y - std::pow(y, 3) * x);
+}
+
 #endif

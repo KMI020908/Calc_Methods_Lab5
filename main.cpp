@@ -17,8 +17,8 @@ const std::string &B_EQ_FILE_PATH, const std::string &N_EQ_FILE_PATH, Type accur
     writeIters(numOfItersB, B_EQ_FILE_PATH);
 
     // Метод Ньютона
-    Type solNewthon = getEquationSolutionNewthon(f, x0, accuracy, h, stopIt);
-    std::size_t numOfItersN = getIterationsNewthon(f, x0, accuracy, h, stopIt);
+    Type solNewthon = getEquationSolutionNewthon(f, x0, h, accuracy, stopIt);
+    std::size_t numOfItersN = getIterationsNewthon(f, x0, h, accuracy, stopIt);
     writeEqResNewthon(solNewthon, x0, accuracy, N_EQ_FILE_PATH);
     writeIters(numOfItersN, N_EQ_FILE_PATH);
 }
@@ -84,7 +84,7 @@ void temp_main(){
     y0 = 7.0;
     L1 = 10.0;
     L2 = 10.0;
-    N = 10;
+    N = 50;
     h = 1e-4;
     checkTestSystem(func41, func42, x0, y0, L1, L2, N, N_SYS_FILE_PATH_1, IT_SYS_FILE_PATH_1, h, accuracy, stopIt);
 
@@ -92,9 +92,15 @@ void temp_main(){
     y0 = 7.0;
     L1 = 10.0;
     L2 = 10.0;
-    N = 20;
+    N = 50;
     h = 1e-4;
     checkTestSystem(func51, func52, x0, y0, L1, L2, N, N_SYS_FILE_PATH_2, IT_SYS_FILE_PATH_2, h, accuracy, stopIt);
+
+    // Бассейн Ньютона
+    Type R = 2;
+    std::size_t n = 4;
+    h = 1e-4;
+    writeNewthonSwPool(func61, func62, R, n, h, accuracy, "D:\\Calc_Methods\\Lab5\\NewthonSwPool.txt", stopIt);
 }
 
 int main(){
