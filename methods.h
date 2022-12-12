@@ -272,4 +272,12 @@ template<typename Type>
 std::size_t getSystemSolutionNewthon(std::vector<Type> &solution, Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y),
 Type firstX, Type firstY, Type accuracy = 1e-6, Type h = 1e-4, Type p = 2.0, std::size_t stopIteration = 10000);
 
+template<typename Type>
+std::size_t locoliseRoots(Type (*f)(Type x), Type firstX, Type lastX, std::size_t numOfElems, 
+std::vector<std::vector<Type>> &segmentMatrix);
+
+template<typename Type>
+FILE_FLAG writeNewthonSwPool(Type (*reF)(Type x, Type y), Type (*imF)(Type x, Type y), Type R, std::size_t n, 
+Type h, Type accuracy, const std::string &OUT_FILE_PATH, std::size_t stopIteration = 10000);
+
 #endif

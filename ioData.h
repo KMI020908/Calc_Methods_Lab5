@@ -85,13 +85,13 @@ template<typename Type>
 FILE_FLAG readValueTable(const std::vector<Type> &xVec, const std::vector<Type> &fVec, const std::string &FILE_PATH);
 
 template<typename Type>
-FILE_FLAG writeEqResBissection(Type sol, Type firstX, Type lastX, Type accuracy, const std::string& OUT_FILE_PATH);
+FILE_FLAG writeEqResBissection(Type sol, Type firstX, Type lastX, Type accuracy, const std::string& OUT_FILE_PATH, bool add = false);
 
 template<typename Type>
-FILE_FLAG writeEqResNewthon(Type sol, Type x0, Type accuracy, const std::string& OUT_FILE_PATH);
+FILE_FLAG writeEqResNewthon(Type sol, Type x0, Type accuracy, const std::string& OUT_FILE_PATH, bool add = false);
 
 template<typename Type>
-FILE_FLAG writeSysResNewthon(const std::vector<Type> &sol, Type x0, Type y0, Type accuracy, const std::string& OUT_FILE_PATH);
+FILE_FLAG writeSysResNewthon(const std::vector<Type> &sol, Type x0, Type y0, Type accuracy, const std::string& OUT_FILE_PATH, bool add = false);
 
 FILE_FLAG writeIters(std::size_t exactIterations, const std::string& OUT_FILE_PATH);
 

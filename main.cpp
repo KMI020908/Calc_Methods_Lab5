@@ -9,18 +9,41 @@
 // Процедура проверки решений уравнения методами бисекции и НьютонаЫ 
 template<typename Type>
 void checkTestEquations(Type (*f)(Type x), Type firstX, Type lastX, Type x0,
-const std::string &B_EQ_FILE_PATH, const std::string &N_EQ_FILE_PATH, Type accuracy = 1e-6, Type h = 1e-4, std::size_t stopIt = 10000){
+const std::string &B_EQ_FILE_PATH, const std::string &N_EQ_FILE_PATH, Type accuracy = 1e-6, Type h = 1e-4, std::size_t stopIt = 10000, std::size_t n = 51){
+    // Локализация корней
+    std::vector<std::vector<Type>> segmentMatrix;
+    std::size_t numOfRoots = locoliseRoots(f, firstX, lastX, n, segmentMatrix);
+
     // Метод биссекции
-    Type solBisection = getEquationSolutionBissection(f, firstX, lastX, accuracy, stopIt);
-    std::size_t numOfItersB = getIterationsBissection(f, firstX, lastX, accuracy, stopIt);
-    writeEqResBissection(solBisection, firstX, lastX, accuracy, B_EQ_FILE_PATH);
-    writeIters(numOfItersB, B_EQ_FILE_PATH);
+    if (numOfRoots != 0){
+        Type solBisection = getEquationSolutionBissection(f, segmentMatrix[0][0], segmentMatrix[0][1], accuracy, stopIt);
+        std::size_t numOfItersB = getIterationsBissection(f, segmentMatrix[0][0], segmentMatrix[0][1], accuracy, stopIt);
+        writeEqResBissection(solBisection, segmentMatrix[0][0], segmentMatrix[0][1], accuracy, B_EQ_FILE_PATH);
+        writeIters(numOfItersB, B_EQ_FILE_PATH);
+        for (std::size_t i = 1; i < numOfRoots; i++){
+            solBisection = getEquationSolutionBissection(f, segmentMatrix[i][0], segmentMatrix[i][1], accuracy, stopIt);
+            numOfItersB = getIterationsBissection(f, segmentMatrix[i][0], segmentMatrix[i][1], accuracy, stopIt);
+            writeEqResBissection(solBisection, segmentMatrix[i][0], segmentMatrix[i][1], accuracy, B_EQ_FILE_PATH, true);
+            writeIters(numOfItersB, B_EQ_FILE_PATH);
+        }    
+    }
 
     // Метод Ньютона
-    Type solNewthon = getEquationSolutionNewthon(f, x0, h, accuracy, stopIt);
-    std::size_t numOfItersN = getIterationsNewthon(f, x0, h, accuracy, stopIt);
-    writeEqResNewthon(solNewthon, x0, accuracy, N_EQ_FILE_PATH);
-    writeIters(numOfItersN, N_EQ_FILE_PATH);
+    if (numOfRoots != 0){
+        Type x0 = (segmentMatrix[0][0] + segmentMatrix[0][1]) / 2.0;
+        Type solNewthon = getEquationSolutionNewthon(f, x0, h, accuracy, stopIt);
+        std::size_t numOfItersN = getIterationsNewthon(f, x0, h, accuracy, stopIt);
+        writeEqResNewthon(solNewthon, x0, accuracy, N_EQ_FILE_PATH);
+        writeIters(numOfItersN, N_EQ_FILE_PATH);
+        for (std::size_t i = 1; i < numOfRoots; i++){
+            x0 = (segmentMatrix[i][0] + segmentMatrix[i][1]) / 2.0;
+            solNewthon = getEquationSolutionNewthon(f, x0, h, accuracy, stopIt);
+            numOfItersN = getIterationsNewthon(f, x0, h, accuracy, stopIt);
+            writeEqResNewthon(solNewthon, x0, accuracy, N_EQ_FILE_PATH, true);
+            writeIters(numOfItersN, N_EQ_FILE_PATH);
+        }
+    }
+    
 }
 
 // Процедура проверки систем уравнений методом Ньютона
@@ -59,25 +82,29 @@ void temp_main(){
     Type accuracy = 1e-6;
     std::size_t stopIt = 10000;
     Type firstX, lastX, x0, y0, h, L1, L2, N;
+    std::size_t n;
 
     // Уравнения
     firstX = 0.0;
     lastX = 1.0;
     x0 = 0.0;
     h = 1e-4;
-    checkTestEquations(func1, firstX, lastX, x0, B_EQ_FILE_PATH_1, N_EQ_FILE_PATH_1, accuracy, h, stopIt);
+    n = 51;
+    checkTestEquations(func1, firstX, lastX, x0, B_EQ_FILE_PATH_1, N_EQ_FILE_PATH_1, accuracy, h, stopIt, n);
 
     firstX = -1.0;
     lastX = 10.0;
     x0 = 1.0;
     h = 1e-6;
-    checkTestEquations(func2, firstX, lastX, x0, B_EQ_FILE_PATH_2, N_EQ_FILE_PATH_2, accuracy, h, stopIt);
+    n = 51;
+    checkTestEquations(func2, firstX, lastX, x0, B_EQ_FILE_PATH_2, N_EQ_FILE_PATH_2, accuracy, h, stopIt, n);
 
     firstX = 0.0;
     lastX = 1.0;
     x0 = 0.75;
     h = 1e-8;
-    checkTestEquations(func3, firstX, lastX, x0, B_EQ_FILE_PATH_3, N_EQ_FILE_PATH_3, accuracy, h, stopIt);
+    n = 51;
+    checkTestEquations(func3, firstX, lastX, x0, B_EQ_FILE_PATH_3, N_EQ_FILE_PATH_3, accuracy, h, stopIt, n);
 
     // Cистемы
     x0 = -2.0;
@@ -98,12 +125,15 @@ void temp_main(){
 
     // Бассейн Ньютона
     Type R = 2;
-    std::size_t n = 4;
+    n = 4;
     h = 1e-4;
     writeNewthonSwPool(func61, func62, R, n, h, accuracy, "D:\\Calc_Methods\\Lab5\\NewthonSwPool.txt", stopIt);
 }
 
 int main(){
     temp_main<double>();
+    std::vector<std::vector<double>> segMatrix;
+    locoliseRoots(func2, -1.0, 10.0, 51, segMatrix);
+    std::cout << segMatrix;
     return 0;
 }

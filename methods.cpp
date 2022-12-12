@@ -2551,4 +2551,27 @@ Type h, Type accuracy, const std::string &OUT_FILE_PATH, std::size_t stopIterati
     }
     file.close();
     return IS_CLOSED;
-};
+}
+
+template<typename Type>
+std::size_t locoliseRoots(Type (*f)(Type x), Type firstX, Type lastX, std::size_t numOfElems, 
+std::vector<std::vector<Type>> &segmentMatrix){
+    if (lastX <= firstX){
+        return 0;
+    }
+    for (std::size_t i = 0; i < segmentMatrix.size(); i++){
+        segmentMatrix[i].clear();
+    }
+    segmentMatrix.clear();
+    std::vector<Type> xGrid, fGrid;
+    getUniformGrid(xGrid, fGrid, f, firstX, lastX, numOfElems);
+    std::vector<Type> tempSegment = {0.0, 0.0};
+    for (std::size_t i = 0; i < numOfElems; i++){
+        if (fGrid[i] * fGrid[i + 1] <= 0){
+            tempSegment[0] = xGrid[i];
+            tempSegment[1] = xGrid[i + 1];
+            segmentMatrix.push_back(tempSegment);
+        }
+    }
+    return segmentMatrix.size();
+}

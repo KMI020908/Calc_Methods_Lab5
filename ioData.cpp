@@ -575,9 +575,15 @@ FILE_FLAG writeValueTable(const std::vector<Type> &xVec, const std::vector<Type>
 }
 
 template<typename Type>
-FILE_FLAG writeEqResBissection(Type sol, Type firstX, Type lastX, Type accuracy, const std::string& OUT_FILE_PATH){
+FILE_FLAG writeEqResBissection(Type sol, Type firstX, Type lastX, Type accuracy, const std::string& OUT_FILE_PATH, bool add){
 	std::ofstream file;
-	file.open(OUT_FILE_PATH);
+	if (add){
+        file.open(OUT_FILE_PATH, std::ios::app);
+        file << '\n' << '\n';
+    }
+    else{
+        file.open(OUT_FILE_PATH);
+    }
 	if (!file.is_open())
 		exit(NOT_OPEN); 
     file << "accuracy = " << accuracy;
@@ -590,9 +596,15 @@ FILE_FLAG writeEqResBissection(Type sol, Type firstX, Type lastX, Type accuracy,
 }
 
 template<typename Type>
-FILE_FLAG writeEqResNewthon(Type sol, Type x0, Type accuracy, const std::string& OUT_FILE_PATH){
+FILE_FLAG writeEqResNewthon(Type sol, Type x0, Type accuracy, const std::string& OUT_FILE_PATH, bool add){
 	std::ofstream file;
-	file.open(OUT_FILE_PATH);
+	if (add){
+        file.open(OUT_FILE_PATH, std::ios::app);
+        file << '\n' << '\n';
+    }
+    else{
+        file.open(OUT_FILE_PATH);
+    }
 	if (!file.is_open())
 		exit(NOT_OPEN); 
     file << "accuracy = " << accuracy;
@@ -604,9 +616,15 @@ FILE_FLAG writeEqResNewthon(Type sol, Type x0, Type accuracy, const std::string&
 }
 
 template<typename Type>
-FILE_FLAG writeSysResNewthon(const std::vector<Type> &sol, Type x0, Type y0, Type accuracy, const std::string& OUT_FILE_PATH){
+FILE_FLAG writeSysResNewthon(const std::vector<Type> &sol, Type x0, Type y0, Type accuracy, const std::string& OUT_FILE_PATH, bool add){
 	std::ofstream file;
-	file.open(OUT_FILE_PATH);
+	if (add){
+        file.open(OUT_FILE_PATH, std::ios::app);
+        file << '\n' << '\n';
+    }
+    else{
+        file.open(OUT_FILE_PATH);
+    }
 	if (!file.is_open())
 		exit(NOT_OPEN); 
     file << "accuracy = " << accuracy;
