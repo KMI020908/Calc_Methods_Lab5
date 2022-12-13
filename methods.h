@@ -273,6 +273,10 @@ std::size_t getSystemSolutionNewthon(std::vector<Type> &solution, Type (*f1)(Typ
 Type firstX, Type firstY, Type accuracy = 1e-6, Type h = 1e-4, Type p = 2.0, std::size_t stopIteration = 10000);
 
 template<typename Type>
+std::size_t getSystemSolutionNewthonAnalytic(std::vector<Type> &solution, std::vector<Type> (*getJacobiMatrixElems)(Type x, Type y), 
+Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y), Type firstX, Type firstY, Type accuracy, Type p, std::size_t stopIteration = 10000);
+
+template<typename Type>
 std::size_t locoliseRoots(Type (*f)(Type x), Type firstX, Type lastX, std::size_t numOfElems, 
 std::vector<std::vector<Type>> &segmentMatrix);
 

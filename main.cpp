@@ -48,13 +48,18 @@ const std::string &B_EQ_FILE_PATH, const std::string &N_EQ_FILE_PATH, Type accur
 
 // Процедура проверки систем уравнений методом Ньютона
 template<typename Type>
-void checkTestSystem(Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y), Type x0, Type y0,
-Type L1, Type L2, std::size_t N, 
-const std::string &N_SYS_FILE_PATH, const std::string &IT_SYS_FILE_PATH, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIt = 10000){
+void checkTestSystem(Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y), std::vector<Type> (*getJacobiMatrixElems)(Type x, Type y), 
+Type x0, Type y0, Type L1, Type L2, std::size_t N, const std::string &N_SYS_FILE_PATH, const std::string &A_N_SYS_FILE_PATH, 
+const std::string &IT_SYS_FILE_PATH, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIt = 10000){
     // Решение системы
     std::vector<Type> solution;
     std::size_t numOfIterations = getSystemSolutionNewthon(solution, f1, f2, x0, y0, accuracy, h, 2.0, stopIt);
     writeSysResNewthon(solution, x0, y0, accuracy, N_SYS_FILE_PATH);
+    writeIters(numOfIterations, N_SYS_FILE_PATH);
+    numOfIterations = getSystemSolutionNewthonAnalytic(solution, getJacobiMatrixElems, f1, f2, x0, y0, accuracy, 2.0, stopIt);
+    writeSysResNewthon(solution, x0, y0, accuracy, A_N_SYS_FILE_PATH);
+    writeIters(numOfIterations, A_N_SYS_FILE_PATH);
+    
     // Анализ сходимости
     std::vector<Type> xGrid;
     std::vector<Type> yGrid;
@@ -113,7 +118,7 @@ void temp_main(){
     L2 = 10.0;
     N = 50;
     h = 1e-4;
-    checkTestSystem(func41, func42, x0, y0, L1, L2, N, N_SYS_FILE_PATH_1, IT_SYS_FILE_PATH_1, h, accuracy, stopIt);
+    checkTestSystem(func41, func42, getJacobiElems1, x0, y0, L1, L2, N, N_SYS_FILE_PATH_1, A_N_SYS_FILE_PATH_1, IT_SYS_FILE_PATH_1, h, accuracy, stopIt);
 
     x0 = -2.0;
     y0 = 7.0;
@@ -121,19 +126,17 @@ void temp_main(){
     L2 = 10.0;
     N = 50;
     h = 1e-4;
-    checkTestSystem(func51, func52, x0, y0, L1, L2, N, N_SYS_FILE_PATH_2, IT_SYS_FILE_PATH_2, h, accuracy, stopIt);
+    checkTestSystem(func51, func52, getJacobiElems2, x0, y0, L1, L2, N, N_SYS_FILE_PATH_2, A_N_SYS_FILE_PATH_2, IT_SYS_FILE_PATH_2, h, accuracy, stopIt);
 
     // Бассейн Ньютона
     Type R = 2;
-    n = 4;
+    n = 200;
     h = 1e-4;
-    writeNewthonSwPool(func61, func62, R, n, h, accuracy, "D:\\Calc_Methods\\Lab5\\NewthonSwPool.txt", stopIt);
+    //writeNewthonSwPool(func61, func62, R, n, h, accuracy, "D:\\Calc_Methods\\Lab5\\NewthonSwPool.txt", stopIt);
 }
 
 int main(){
     temp_main<double>();
-    std::vector<std::vector<double>> segMatrix;
-    locoliseRoots(func2, -1.0, 10.0, 51, segMatrix);
-    std::cout << segMatrix;
+
     return 0;
 }

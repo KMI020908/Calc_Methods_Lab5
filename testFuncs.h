@@ -52,4 +52,20 @@ Type func62(Type x, Type y){
     return 4.0 * (std::pow(x, 3) * y - std::pow(y, 3) * x);
 }
 
+// Аналитически вычисленные элементы матрицы Якоби
+template<typename Type>
+std::vector<Type> getJacobiElems1(Type x, Type y){
+    return std::vector<Type>{
+        2.0 * x, -2.0 * y,
+        y, x
+    };
+}
+
+template<typename Type>
+std::vector<Type> getJacobiElems2(Type x, Type y){
+    return std::vector<Type>{
+        2.0 * x + 1.0, 2.0 * y + 1.0,
+        2.0 * x + y, 2.0 * y + x
+    };
+}
 #endif

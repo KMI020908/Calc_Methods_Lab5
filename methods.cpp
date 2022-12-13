@@ -2414,11 +2414,11 @@ std::size_t getIterationsBissection(Type (*f)(Type x), Type firstX, Type lastX, 
     Type rightX = lastX;
     Type tempX = (leftX + rightX) / 2.0;
     while ((rightX - leftX) / 2.0 > accuracy){
-        if (f(tempX) * f(rightX) > 0.0){
-            rightX = tempX;
-        }
-        if (f(tempX) * f(leftX) > 0.0){
+        if (f(tempX) * f(rightX) < 0.0){
             leftX = tempX;
+        }
+        if (f(tempX) * f(leftX) < 0.0){
+            rightX = tempX;
         }
         tempX = (leftX + rightX) / 2.0;
         if (numOfIters == stopIteration){
@@ -2513,6 +2513,45 @@ Type firstX, Type firstY, Type h, Type accuracy, Type p, std::size_t stopIterati
         rightVec[0] = -f1(prevSolution[0], prevSolution[1]);
         rightVec[1] = -f2(prevSolution[0], prevSolution[1]);
         getJacobiMatrix2D(JacobiMatrix , f1, f2, prevSolution[0], prevSolution[1], h);
+        gaussMethod(JacobiMatrix, rightVec, deltaVec, accuracy);
+        for (std::size_t i = 0; i < 2; i++){
+            solution[i] = deltaVec[i] + prevSolution[i];
+        }
+        numOfIterations++;
+        if (numOfIterations == stopIteration){
+            break;
+        }
+    }
+    return numOfIterations;
+}
+
+template<typename Type>
+std::size_t getSystemSolutionNewthonAnalytic(std::vector<Type> &solution, std::vector<Type> (*getJacobiMatrixElems)(Type x, Type y), 
+Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y), Type firstX, Type firstY, Type accuracy, Type p, std::size_t stopIteration){
+    std::size_t numOfIterations = 1;
+    solution.resize(2);
+    std::vector<Type> prevSolution = {firstX, firstY};
+    std::vector<std::vector<Type>> JacobiMatrix;
+    std::vector<Type> JacobiElems = getJacobiMatrixElems(prevSolution[0], prevSolution[1]);
+    JacobiMatrix.push_back(std::vector<Type>{JacobiElems[0], JacobiElems[1]});
+    JacobiMatrix.push_back(std::vector<Type>{JacobiElems[2], JacobiElems[3]});
+    std::vector<Type> deltaVec;
+    std::vector<Type> rightVec = {-f1(prevSolution[0], prevSolution[1]), -f2(prevSolution[0], prevSolution[1])};
+    gaussMethod(JacobiMatrix, rightVec, deltaVec, accuracy);
+    for (std::size_t i = 0; i < 2; i++){
+        solution[i] = deltaVec[i] + prevSolution[i];
+    }
+    while(normOfVector(solution - prevSolution, p) > accuracy){
+        for (std::size_t i = 0; i < 2; i++){
+            prevSolution[i] = solution[i];
+        }
+        rightVec[0] = -f1(prevSolution[0], prevSolution[1]);
+        rightVec[1] = -f2(prevSolution[0], prevSolution[1]);
+        JacobiElems = getJacobiMatrixElems(prevSolution[0], prevSolution[1]);
+        JacobiMatrix[0][0] = JacobiElems[0];
+        JacobiMatrix[0][1] = JacobiElems[1];
+        JacobiMatrix[1][0] = JacobiElems[2];
+        JacobiMatrix[1][1] = JacobiElems[3];
         gaussMethod(JacobiMatrix, rightVec, deltaVec, accuracy);
         for (std::size_t i = 0; i < 2; i++){
             solution[i] = deltaVec[i] + prevSolution[i];
