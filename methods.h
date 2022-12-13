@@ -266,6 +266,9 @@ template<typename Type>
 Type getEquationSolutionNewthon(Type (*f)(Type x), Type firstX, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIteration = 10000);
 
 template<typename Type>
+Type getEquationSolutionNewthonModified(Type (*f)(Type x), Type firstX, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIteration = 10000);
+
+template<typename Type>
 std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIteration = 10000);
 
 template<typename Type>

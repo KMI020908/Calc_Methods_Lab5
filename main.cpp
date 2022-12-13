@@ -35,10 +35,18 @@ const std::string &B_EQ_FILE_PATH, const std::string &N_EQ_FILE_PATH, Type accur
         std::size_t numOfItersN = getIterationsNewthon(f, x0, h, accuracy, stopIt);
         writeEqResNewthon(solNewthon, x0, accuracy, N_EQ_FILE_PATH);
         writeIters(numOfItersN, N_EQ_FILE_PATH);
+        solNewthon = getEquationSolutionNewthonModified(f, x0, h, accuracy, stopIt);
+        numOfItersN = getIterationsNewthonModified(f, x0, h, accuracy, stopIt);
+        writeEqResNewthon(solNewthon, x0, accuracy, N_EQ_FILE_PATH, true);
+        writeIters(numOfItersN, N_EQ_FILE_PATH);
         for (std::size_t i = 1; i < numOfRoots; i++){
             x0 = (segmentMatrix[i][0] + segmentMatrix[i][1]) / 2.0;
             solNewthon = getEquationSolutionNewthon(f, x0, h, accuracy, stopIt);
             numOfItersN = getIterationsNewthon(f, x0, h, accuracy, stopIt);
+            writeEqResNewthon(solNewthon, x0, accuracy, N_EQ_FILE_PATH, true);
+            writeIters(numOfItersN, N_EQ_FILE_PATH);
+            solNewthon = getEquationSolutionNewthonModified(f, x0, h, accuracy, stopIt);
+            numOfItersN = getIterationsNewthonModified(f, x0, h, accuracy, stopIt);
             writeEqResNewthon(solNewthon, x0, accuracy, N_EQ_FILE_PATH, true);
             writeIters(numOfItersN, N_EQ_FILE_PATH);
         }

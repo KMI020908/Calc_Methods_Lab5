@@ -2477,6 +2477,23 @@ Type getEquationSolutionNewthon(Type (*f)(Type x), Type firstX, Type h, Type acc
 }
 
 template<typename Type>
+Type getEquationSolutionNewthonModified(Type (*f)(Type x), Type firstX, Type h, Type accuracy, std::size_t stopIteration){
+    Type tempX = firstX - f(firstX) / diff(f, firstX, h);
+    Type prevX = firstX;
+    std::size_t numOfIters = 0;
+    Type diff0 = diff(f, firstX, h);
+    while (std::abs(tempX - prevX) > accuracy){
+        prevX = tempX;
+        tempX = prevX - f(prevX) / diff0;
+        if (numOfIters == stopIteration){
+            return tempX;
+        }
+        numOfIters++;
+    }
+    return tempX;
+}
+
+template<typename Type>
 std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type h, Type accuracy, std::size_t stopIteration){
     Type tempX = firstX - f(firstX) / diff(f, firstX, accuracy);
     Type prevX = firstX;
@@ -2484,6 +2501,23 @@ std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type h, Type ac
     while (std::abs(tempX - prevX) > accuracy){
         prevX = tempX;
         tempX = prevX - f(prevX) / diff(f, prevX, h);
+        if (numOfIters == stopIteration){
+            return tempX;
+        }
+        numOfIters++;
+    }
+    return numOfIters;
+}
+
+template<typename Type>
+std::size_t getIterationsNewthonModified(Type (*f)(Type x), Type firstX, Type h, Type accuracy, std::size_t stopIteration){
+    Type tempX = firstX - f(firstX) / diff(f, firstX, accuracy);
+    Type prevX = firstX;
+    std::size_t numOfIters = 0;
+    Type diff0 = diff(f, firstX, h);
+    while (std::abs(tempX - prevX) > accuracy){
+        prevX = tempX;
+        tempX = prevX - f(prevX) / diff0;
         if (numOfIters == stopIteration){
             return tempX;
         }
@@ -2613,4 +2647,4 @@ std::vector<std::vector<Type>> &segmentMatrix){
         }
     }
     return segmentMatrix.size();
-}
+}               
