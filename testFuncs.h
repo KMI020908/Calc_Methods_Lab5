@@ -20,6 +20,21 @@ Type func3(Type x){
     return 35.0 * std::pow(x, 3) - 67.0 * std::pow(x, 2) - 3.0 * x + 3.0;
 }
 
+template<typename Type>
+Type func4(Type x){
+    return sqrt(std::abs(x - 1.0));
+}
+
+template<typename Type>
+Type func5(Type x){
+    return pow(pow(x - 1.0, 2), 1.0 / 3.0);
+}
+
+template<typename Type>
+Type func6(Type x){
+    return sin(x);
+}
+
 // Тесты для системы
 
 template<typename Type>

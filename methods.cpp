@@ -2495,7 +2495,7 @@ Type getEquationSolutionNewthonModified(Type (*f)(Type x), Type firstX, Type h, 
 
 template<typename Type>
 std::size_t getIterationsNewthon(Type (*f)(Type x), Type firstX, Type h, Type accuracy, std::size_t stopIteration){
-    Type tempX = firstX - f(firstX) / diff(f, firstX, accuracy);
+    Type tempX = firstX - f(firstX) / diff(f, firstX, h);
     Type prevX = firstX;
     std::size_t numOfIters = 0;
     while (std::abs(tempX - prevX) > accuracy){
@@ -2648,3 +2648,25 @@ std::vector<std::vector<Type>> &segmentMatrix){
     }
     return segmentMatrix.size();
 }               
+
+template<typename Type>
+Type getConvergEstimateNewthon(Type (*f)(Type x), Type x_0, Type realX, Type h, Type accuracy, std::size_t stopIteration){
+    Type prevX = x_0;
+    Type tempX = x_0 - f(x_0) / diff(f, x_0, h);
+    Type nextX = tempX - f(tempX) / diff(f, tempX, h);
+    Type s = std::log(std::abs((tempX - realX) / (nextX - realX))) / std::log(std::abs((prevX - realX) / (tempX - realX)));
+    std::size_t numOfIters = 0;
+    while (std::abs(tempX - prevX) > accuracy){
+        prevX = tempX;
+        tempX = prevX - f(prevX) / diff(f, prevX, h);
+        nextX = tempX - f(tempX) / diff(f, tempX, h);
+        if (std::abs(nextX - realX) > 2.0 * accuracy){
+            s = std::log(std::abs((tempX - realX) / (nextX - realX))) / std::log(std::abs((prevX - realX) / (tempX - realX)));
+        }
+        if (numOfIters == stopIteration){
+            return tempX;
+        }
+        numOfIters++;
+    }
+    return s;
+} 

@@ -287,4 +287,7 @@ template<typename Type>
 FILE_FLAG writeNewthonSwPool(Type (*reF)(Type x, Type y), Type (*imF)(Type x, Type y), Type R, std::size_t n, 
 Type h, Type accuracy, const std::string &OUT_FILE_PATH, std::size_t stopIteration = 10000);
 
+template<typename Type>
+Type getConvergEstimateNewthon(Type (*f)(Type x), Type x_0, Type realX, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIteration = 10000);
+
 #endif

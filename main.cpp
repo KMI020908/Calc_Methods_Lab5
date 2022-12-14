@@ -58,7 +58,7 @@ const std::string &B_EQ_FILE_PATH, const std::string &N_EQ_FILE_PATH, Type accur
 template<typename Type>
 void checkTestSystem(Type (*f1)(Type x, Type y), Type (*f2)(Type x, Type y), std::vector<Type> (*getJacobiMatrixElems)(Type x, Type y), 
 Type x0, Type y0, Type L1, Type L2, std::size_t N, const std::string &N_SYS_FILE_PATH, const std::string &A_N_SYS_FILE_PATH, 
-const std::string &IT_SYS_FILE_PATH, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIt = 10000){
+const std::string &IT_SYS_FILE_PATH, const std::string &A_IT_SYS_FILE_PATH, Type h = 1e-4, Type accuracy = 1e-6, std::size_t stopIt = 10000){
     // Решение системы
     std::vector<Type> solution;
     std::size_t numOfIterations = getSystemSolutionNewthon(solution, f1, f2, x0, y0, accuracy, h, 2.0, stopIt);
@@ -78,16 +78,25 @@ const std::string &IT_SYS_FILE_PATH, Type h = 1e-4, Type accuracy = 1e-6, std::s
         yGrid.push_back(-L2 + i * h2);
     }
     std::vector<Type> iterationVec(3);
-    std::vector<std::vector<Type>> iterationMatrix;
+    std::vector<std::vector<Type>> iterationMatrix, iterationMatrixAnalytic;
     for (std::size_t i = 0; i < xGrid.size(); i++){
         for (std::size_t j = 0; j < yGrid.size(); j++){
             iterationVec[0] = xGrid[i];
             iterationVec[1] = yGrid[j];
-            iterationVec[2] = static_cast<Type>(getSystemSolutionNewthon(solution, f1, f2, xGrid[i], yGrid[j], accuracy, h, 2.0, stopIt));
+            iterationVec[2] = static_cast<Type>(getSystemSolutionNewthon(solution, f1, f2, xGrid[i], yGrid[j], h, accuracy, 2.0, stopIt));
             iterationMatrix.push_back(iterationVec);
         }
     }
     writeMatrixFile(iterationMatrix, IT_SYS_FILE_PATH);
+    for (std::size_t i = 0; i < xGrid.size(); i++){
+        for (std::size_t j = 0; j < yGrid.size(); j++){
+            iterationVec[0] = xGrid[i];
+            iterationVec[1] = yGrid[j];
+            iterationVec[2] = static_cast<Type>(getSystemSolutionNewthonAnalytic(solution, getJacobiMatrixElems, f1, f2, xGrid[i], yGrid[j], accuracy, 2.0, stopIt));
+            iterationMatrixAnalytic.push_back(iterationVec);
+        }
+    }
+    writeMatrixFile(iterationMatrixAnalytic, A_IT_SYS_FILE_PATH);
 }
 
 template<typename Type>
@@ -126,7 +135,7 @@ void temp_main(){
     L2 = 10.0;
     N = 50;
     h = 1e-4;
-    checkTestSystem(func41, func42, getJacobiElems1, x0, y0, L1, L2, N, N_SYS_FILE_PATH_1, A_N_SYS_FILE_PATH_1, IT_SYS_FILE_PATH_1, h, accuracy, stopIt);
+    checkTestSystem(func41, func42, getJacobiElems1, x0, y0, L1, L2, N, N_SYS_FILE_PATH_1, A_N_SYS_FILE_PATH_1, IT_SYS_FILE_PATH_1, A_IT_SYS_FILE_PATH_1, h, accuracy, stopIt);
 
     x0 = -2.0;
     y0 = 7.0;
@@ -134,7 +143,7 @@ void temp_main(){
     L2 = 10.0;
     N = 50;
     h = 1e-4;
-    checkTestSystem(func51, func52, getJacobiElems2, x0, y0, L1, L2, N, N_SYS_FILE_PATH_2, A_N_SYS_FILE_PATH_2, IT_SYS_FILE_PATH_2, h, accuracy, stopIt);
+    checkTestSystem(func51, func52, getJacobiElems2, x0, y0, L1, L2, N, N_SYS_FILE_PATH_2, A_N_SYS_FILE_PATH_2, IT_SYS_FILE_PATH_2, A_IT_SYS_FILE_PATH_2, h, accuracy, stopIt);
 
     // Бассейн Ньютона
     Type R = 2;
@@ -144,7 +153,13 @@ void temp_main(){
 }
 
 int main(){
-    temp_main<double>();
+    //temp_main<double>();
+    std::cout << getEquationSolutionNewthon(func1, 1.0) << '\n';
+    std::cout << getConvergEstimateNewthon(func1, 1.0, 0.75, 1e-4, 1e-6, 10000) << '\n'; // Функция из методы
+    std::cout << getConvergEstimateNewthon(func4, 100.0, 1.0, 1e-4, 1e-6, 10000) << '\n'; // x^2
+    std::cout << getConvergEstimateNewthon(func6, 1.0, 0.0, 1e-4, 1e-6, 10000) << '\n'; // sin
+    std::cout << getConvergEstimateNewthon(func5, 2.0, 1.0, 1e-4, 1e-6, 10000) << '\n'; // корень
+
 
     return 0;
 }
